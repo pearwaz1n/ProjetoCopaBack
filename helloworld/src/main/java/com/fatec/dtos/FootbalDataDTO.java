@@ -4,19 +4,25 @@ import java.util.List;
 
 public class FootbalDataDTO {
 
-    // 1. O time isolado
     public record Equipe(String name) {
     }
 
-    // 2. A partida
+    // Estrutura para pegar os placares
+    public record PlacarFullTime(Integer home, Integer away) {
+    }
+
+    public record Score(PlacarFullTime fullTime) {
+    }
+
     public record Partida(
+            String status,
             String utcDate,
             String group,
             Equipe homeTeam,
-            Equipe awayTeam) {
+            Equipe awayTeam,
+            Score score) {
     }
 
-    // 3. A lista completa que vem da API
     public record RespostaApi(List<Partida> matches) {
     }
 }

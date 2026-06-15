@@ -14,6 +14,7 @@ import com.fatec.services.IngressosService;
 
 import jakarta.validation.Valid;
 
+// Controlador responsável por lidar com as requisições HTTP (endpoints) relacionadas a Ingressos
 @RestController
 @RequestMapping("/ingressos")
 @CrossOrigin
@@ -22,22 +23,26 @@ public class IngressosController {
     @Autowired
     private IngressosService service;
 
+    // Retorna a lista de todos os ingressos cadastrados (Método GET)
     @GetMapping
     public ResponseEntity<List<IngressosResponse>> getAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
+    // Busca um ingresso específico pelo seu ID (Método GET)
     @GetMapping("{id}")
     public ResponseEntity<IngressosResponse> getById(@PathVariable long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
+    // Remove um ingresso específico pelo seu ID (Método DELETE)
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteById(@PathVariable long id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
+    // Cadastra um novo ingresso recebendo os dados na requisição (Método POST)
     @PostMapping
     public ResponseEntity<IngressosResponse> save(@Valid @RequestBody IngressosRequest request) {
         IngressosResponse response = service.save(request);
@@ -51,6 +56,7 @@ public class IngressosController {
         return ResponseEntity.created(location).body(response);
     }
 
+    // Atualiza os dados de um ingresso existente usando seu ID (Método PUT)
     @PutMapping("{id}")
     public ResponseEntity<Void> update(@PathVariable long id, @RequestBody IngressosRequest request) {
         service.update(request, id);

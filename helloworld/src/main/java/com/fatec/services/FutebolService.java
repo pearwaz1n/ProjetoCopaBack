@@ -27,7 +27,7 @@ public class FutebolService {
     public List<JogoResponse> buscarJogos() {
         RestTemplate restTemplate = new RestTemplate();
 
-        // Colocando a chave no cabeçalho da requisição
+        // Anexa a chave secreta no cabeçalho da requisição
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-Auth-Token", apiKey);
 
@@ -41,14 +41,22 @@ public class FutebolService {
                     entity,
                     RespostaApi.class);
 
-            // mapear para ResponseJogo
+            // Mapear para JogoResponse com os campos de placar e status
             if (response.getBody() != null && response.getBody().matches() != null) {
                 return response.getBody().matches().stream()
                         .map(partida -> new JogoResponse(
                                 partida.utcDate(),
                                 partida.group() != null ? partida.group() : "Fase de Grupos",
                                 partida.homeTeam().name(),
-                                partida.awayTeam().name()))
+                                partida.awayTeam().name(),
+                                partida.status(), // Status da partida
+                                (partida.score() != null && partida.score().fullTime() != null)
+                                        ? partida.score().fullTime().home()
+                                        : null, // Gols Mandante
+                                (partida.score() != null && partida.score().fullTime() != null)
+                                        ? partida.score().fullTime().away()
+                                        : null // Gols Visitante
+                        ))
                         .toList();
             }
         } catch (Exception e) {
